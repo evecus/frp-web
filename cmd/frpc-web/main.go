@@ -19,10 +19,10 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/fatedier/frp/client"
-	"github.com/fatedier/frp/client/source"
+	"github.com/fatedier/frp/pkg/config/source"       // ← 改这行
 	v1 "github.com/fatedier/frp/pkg/config/v1"
 	frplog "github.com/fatedier/frp/pkg/util/log"
-	"github.com/fatedier/frp/pkg/util/security"
+	"github.com/fatedier/frp/pkg/policy/security"     // ← 改这行
 )
 
 // ─── Data types ───────────────────────────────────────────────────────────────
