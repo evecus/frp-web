@@ -433,8 +433,8 @@ const api = {
 function toast(msg, type='ok') {
   const el = document.createElement('div');
   const icons = {ok:'✓', err:'✕', info:'ℹ'};
-  el.className = `toast-item toast-${type}`;
-  el.innerHTML = `<span>${icons[type]||'•'}</span><span>${esc(msg)}</span>`;
+  el.className = ` + "`" + `toast-item toast-${type}` + "`" + `;
+  el.innerHTML = ` + "`" + `<span>${icons[type]||'•'}</span><span>${esc(msg)}</span>` + "`" + `;
   g('toast').appendChild(el);
   setTimeout(() => { el.style.animation='fadeOut .3s ease forwards'; setTimeout(() => el.remove(), 300); }, 3000);
 }
@@ -468,7 +468,7 @@ function nav(page) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   g('page-' + page).classList.add('active');
-  document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+  document.querySelector(` + "`" + `.nav-item[data-page="${page}"]` + "`" + `).classList.add('active');
   g('page-title').textContent = pageTitles[page] || page;
   if (page === 'proxies') loadProxies();
   if (page === 'servers') loadProfiles();
@@ -490,7 +490,7 @@ async function loadStatus() {
     }
     // Server info bar
     if (d.serverAddr) {
-      g('server-info-bar').textContent = `${d.profileName || ''} — ${d.serverAddr}:${d.serverPort}`;
+      g('server-info-bar').textContent = ` + "`" + `${d.profileName || ''} — ${d.serverAddr}:${d.serverPort}` + "`" + `;
     }
     // Username tag
     if (d.username) {
@@ -509,13 +509,13 @@ async function loadStatus() {
     if (!proxies.length) {
       tb.innerHTML = '<tr class="empty-row"><td colspan="5">暂无代理</td></tr>';
     } else {
-      tb.innerHTML = proxies.map(p => `<tr>
+      tb.innerHTML = proxies.map(p => ` + "`" + `<tr>
         <td class="font-mono">${esc(p.name)}</td>
         <td><span class="badge badge-${p.type||'tcp'}">${(p.type||'tcp').toUpperCase()}</span></td>
         <td class="font-mono">${esc(p.localAddr||'-')}</td>
         <td class="font-mono">${esc(p.remoteAddr||'-')}</td>
         <td><span class="badge ${p.err?'badge-error':p.status==='running'?'badge-running':'badge-stopped'}">${p.err?'错误':p.status==='running'?'运行中':'停止'}</span></td>
-      </tr>`).join('');
+      </tr>` + "`" + `).join('');
     }
   } catch(e) {}
 }
@@ -542,8 +542,8 @@ async function loadProxies() {
       tb.innerHTML = '<tr class="empty-row"><td colspan="6">暂无代理 — 点击「添加代理」创建</td></tr>'; return;
     }
     tb.innerHTML = list.map(p => {
-      const remote = p.remotePort ? `:${p.remotePort}` : (p.customDomain || p.subdomain || '-');
-      return `<tr>
+      const remote = p.remotePort ? ` + "`" + `:${p.remotePort}` + "`" + ` : (p.customDomain || p.subdomain || '-');
+      return ` + "`" + `<tr>
         <td class="font-mono">${esc(p.name)}</td>
         <td><span class="badge badge-${p.type||'tcp'}">${(p.type||'tcp').toUpperCase()}</span></td>
         <td class="font-mono">${esc(p.localIP||'127.0.0.1')}:${p.localPort}</td>
@@ -553,7 +553,7 @@ async function loadProxies() {
           <button class="btn btn-ghost btn-sm" onclick='editProxy(${JSON.stringify(p)})'>编辑</button>
           <button class="btn btn-danger btn-sm" onclick="delProxy('${esc(p.name)}')">删除</button>
         </div></td>
-      </tr>`;
+      </tr>` + "`" + `;
     }).join('');
   } catch(e) { toast(e.message,'err'); }
 }
@@ -615,7 +615,7 @@ async function saveProxy() {
 }
 
 async function delProxy(name) {
-  if (!confirm(`删除代理 "${name}"?`)) return;
+  if (!confirm(` + "`" + `删除代理 "${name}"?` + "`" + `)) return;
   try { await api.del('/proxies/' + encodeURIComponent(name)); toast('已删除'); loadProxies(); loadStatus(); }
   catch(e) { toast(e.message,'err'); }
 }
@@ -633,20 +633,20 @@ async function loadProfiles() {
     if (!profilesData.length) {
       grid.innerHTML = '<p style="color:var(--text-muted);font-size:13px">暂无服务器配置</p>'; return;
     }
-    grid.innerHTML = profilesData.map(p => `
+    grid.innerHTML = profilesData.map(p => ` + "`" + `
       <div class="profile-card ${p.id === activeID ? 'active' : ''}" onclick="activateProfile('${p.id}')">
         <div class="profile-name">
           ${esc(p.name)}
           ${p.id === activeID ? '<span class="badge badge-active">当前</span>' : ''}
         </div>
         <div class="profile-addr">${esc(p.serverAddr)}:${p.serverPort}</div>
-        ${p.username ? `<div class="profile-user">用户名: <strong>${esc(p.username)}</strong></div>` : ''}
+        ${p.username ? ` + "`" + `<div class="profile-user">用户名: <strong>${esc(p.username)}</strong></div>` + "`" + ` : ''}
         <div class="profile-actions">
           <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();editProfile('${p.id}')">编辑</button>
           <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();testProfile('${p.id}', this)">测试</button>
-          ${profilesData.length > 1 ? `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();delProfile('${p.id}')">删除</button>` : ''}
+          ${profilesData.length > 1 ? ` + "`" + `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();delProfile('${p.id}')">删除</button>` + "`" + ` : ''}
         </div>
-      </div>`).join('');
+      </div>` + "`" + `).join('');
   } catch(e) { toast(e.message,'err'); }
 }
 
